@@ -73,7 +73,7 @@ describe('Persistent Node Chat Server', function () {
     //   INSERT INTO messages (msg, user_id, room_id) \
     //   VALUES ('Men like you can never change!', 1, id FROM rooms WHERE roomname = 'main');";
 
-    var queryString = "INSERT INTO users (username) VALUES ('user'); INSERT INTO rooms (roomname) VALUES ('main'); INSERT INTO messages (msg, user_id, room_id) VALUES ('message goes here', (SELECT users.id FROM users WHERE users.username = 'user'), (SELECT rooms.id FROM rooms WHERE rooms.roomname = 'main'));";
+    var queryString = "INSERT INTO users (username) VALUES ('Test User'); INSERT INTO rooms (roomname) VALUES ('main'); INSERT INTO messages (msg, user_id, room_id) VALUES ('Men like you can never change!', (SELECT users.id FROM users WHERE users.username = 'Test User'), (SELECT rooms.id FROM rooms WHERE rooms.roomname = 'main'));";
 
     var queryArgs = [];
     // TODO - The exact query string and query args to use
