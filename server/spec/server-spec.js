@@ -69,13 +69,18 @@ describe('Persistent Node Chat Server', function () {
   it('Should output all messages from the DB', function (done) {
     // Let's insert a message into the db
 
-    var queryString = "INSERT INTO rooms (roomname) VALUES ('main'); \
-      INSERT INTO messages (msg, user_id, room_id) \
-      VALUES ('Men like you can never change!', 1, id FROM rooms WHERE roomname = 'main');";
+    // var queryString = "INSERT INTO rooms (roomname) VALUES ('main'); \
+    //   INSERT INTO messages (msg, user_id, room_id) \
+    //   VALUES ('Men like you can never change!', 1, id FROM rooms WHERE roomname = 'main');";
+
+    var queryString = "INSERT INTO users (username) VALUES ('user'); INSERT INTO rooms (roomname) VALUES ('main'); INSERT INTO messages (msg, user_id, room_id) VALUES ('message goes here', (SELECT users.id FROM users WHERE users.username = 'user'), (SELECT rooms.id FROM rooms WHERE rooms.roomname = 'main'));";
+
     var queryArgs = [];
     // TODO - The exact query string and query args to use
     // here depend on the schema you design, so I'll leave
     // them up to you. */
+
+    // SQL to reset the auto_increment to 1 -- ALTER TABLE tablename AUTO_INCREMENT = 1
 
     dbConnection.query(queryString, queryArgs, function (err) {
       if (err) { throw err; }
