@@ -10,7 +10,8 @@ let connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'chat'
+  database: 'chat',
+  multipleStatements: true
 });
 
 connection.connect((err) => {

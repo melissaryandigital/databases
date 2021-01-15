@@ -21,8 +21,6 @@ describe('Persistent Node Chat Server', function () {
     /* Empty the db table before each test so that multiple tests
      * (or repeated runs of the tests) won't screw each other up: */
     dbConnection.query('truncate ' + tablename);
-    dbConnection.query('truncate users');
-    dbConnection.query('truncate rooms');
     dbConnection.query("INSERT INTO users (username) VALUES ('Test User'); INSERT INTO rooms (roomname) VALUES ('main');");
     done();
   });

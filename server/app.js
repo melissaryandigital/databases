@@ -30,3 +30,12 @@ if (!module.parent) {
   console.log('Listening on', app.get('port'));
 }
 
+
+//FAKE POST REQUEST
+var models = require ('./models');
+
+models.messages.post({
+  text: 'this is a message',
+  username: 'a user',
+  roomname: 'main'
+});
