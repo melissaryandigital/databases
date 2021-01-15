@@ -20,7 +20,11 @@ describe('Persistent Node Chat Server', function () {
 
     /* Empty the db table before each test so that multiple tests
      * (or repeated runs of the tests) won't screw each other up: */
-    dbConnection.query('truncate ' + tablename, done);
+    dbConnection.query('truncate ' + tablename);
+    dbConnection.query('truncate users');
+    dbConnection.query('truncate rooms');
+    dbConnection.query("INSERT INTO users (username) VALUES ('Test User'); INSERT INTO rooms (roomname) VALUES ('main');");
+    done();
   });
 
   afterEach(function () {
@@ -73,7 +77,7 @@ describe('Persistent Node Chat Server', function () {
     //   INSERT INTO messages (msg, user_id, room_id) \
     //   VALUES ('Men like you can never change!', 1, id FROM rooms WHERE roomname = 'main');";
 
-    var queryString = "INSERT INTO users (username) VALUES ('Test User'); INSERT INTO rooms (roomname) VALUES ('main'); INSERT INTO messages (msg, user_id, room_id) VALUES ('Men like you can never change!', (SELECT users.id FROM users WHERE users.username = 'Test User'), (SELECT rooms.id FROM rooms WHERE rooms.roomname = 'main'));";
+    var queryString = "INSERT INTO messages (msg, user_id, room_id) VALUES ('Men like you can never change!', (SELECT users.id FROM users WHERE users.username = 'Test User'), (SELECT rooms.id FROM rooms WHERE rooms.roomname = 'main'));";
 
     var queryArgs = [];
     // TODO - The exact query string and query args to use
