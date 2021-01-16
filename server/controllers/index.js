@@ -3,24 +3,26 @@ var models = require('../models');
 module.exports = {
   messages: {
     get: function (req, res) {
-      models.messages.get(data => {
+      models.messages.get((data) => {
         //maybe todo:  format data
-        var formattedMessages = data.map((each) => {
-          return {
+        var formattedMessages = [];
+        data.forEach((each) => {
+          formattedMessages.push({
             text: each.msg,
             username: each.username,
             roomname: each.roomname
-          };
+          });
         });
 
+        console.log(formattedMessages);
 
-        //add the data to the repsonse
         res.json( {results: formattedMessages} );
         //close the response
       });
     }, // a function which handles a get request for all messages
     post: function (req, res) {
-      models.messages.post();
+      models.messages.post(req.body);
+      res.sendStatus(200);
     } // a function which handles posting a message to the database
   },
 

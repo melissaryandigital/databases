@@ -12,7 +12,7 @@ module.exports = {
       // Connect to the database - this happens in the db/index.js file
       // Use a SELECT statement to get all the messages from the messages table
 
-      var queryString = 'SELECT * FROM messages';
+      var queryString = 'SELECT * FROM messages INNER JOIN users ON messages.user_id = users.id INNER JOIN rooms ON messages.room_id = rooms.id';
       var queryArgs = [];
 
       // db.query(queryString, queryArgs, (err, result, fields) => {
@@ -22,7 +22,6 @@ module.exports = {
       // });
       Promise.promisify(db.query).bind(db)(queryString, queryArgs)
         .then(messages => {
-          console.log('retrieved messages from database:', messages);
           sendToClient(messages);
         })
         .catch(error => {
@@ -58,4 +57,3 @@ module.exports = {
     post: function () { }
   }
 };
-
