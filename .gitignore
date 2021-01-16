@@ -1,4 +1,5 @@
 ### node etc ###
+.client/node_modules
 
 # Logs
 logs

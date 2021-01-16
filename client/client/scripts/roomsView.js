@@ -3,13 +3,13 @@ var RoomsView = {
   $button: $('#rooms button'),
   $select: $('#rooms select'),
 
-  initialize: function () {
+  initialize: function() {
 
     RoomsView.$select.on('change', RoomsView.handleChange);
     RoomsView.$button.on('click', RoomsView.handleClick);
-  },
+      },
 
-  render: function () {
+  render: function() {
 
     RoomsView.$select.html('');
     Rooms
@@ -18,17 +18,17 @@ var RoomsView = {
     RoomsView.$select.val(Rooms.selected);
   },
 
-  renderRoom: function (roomname) {
+  renderRoom: function(roomname) {
     var $option = $('<option>').val(roomname).text(roomname);
     RoomsView.$select.append($option);
   },
 
-  handleChange: function (event) {
+  handleChange: function(event) {
     Rooms.selected = RoomsView.$select.val();
     MessagesView.render();
   },
 
-  handleClick: function (event) {
+  handleClick: function(event) {
     var roomname = prompt('Enter room name');
     if (roomname) {
       Rooms.add(roomname, () => {
@@ -36,6 +36,6 @@ var RoomsView = {
         MessagesView.render();
       });
     }
-  }
+      }
 
 };
