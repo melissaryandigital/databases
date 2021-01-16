@@ -23,6 +23,11 @@ CREATE TABLE messages (
   FOREIGN KEY(room_id) REFERENCES rooms(id)
 );
 
+INSERT INTO users (username) values ('default');
+INSERT INTO rooms (roomname) VALUES ('default');
+INSERT INTO messages (msg, user_id, room_id)
+  VALUES ('default msg', (SELECT id FROM users WHERE users.username = 'default'), (SELECT id FROM rooms WHERE rooms.roomname = 'default'))
+
 /* Create other tables and define schemas for them here! */
 
 

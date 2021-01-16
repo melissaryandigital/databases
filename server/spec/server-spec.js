@@ -12,7 +12,8 @@ describe('Persistent Node Chat Server', function () {
     dbConnection = mysql.createConnection({
       user: 'root',
       password: '',
-      database: 'chat'
+      database: 'chat',
+      multipleStatements: true
     });
     dbConnection.connect();
 
@@ -21,7 +22,6 @@ describe('Persistent Node Chat Server', function () {
     /* Empty the db table before each test so that multiple tests
      * (or repeated runs of the tests) won't screw each other up: */
     dbConnection.query('truncate ' + tablename);
-    dbConnection.query("INSERT INTO users (username) VALUES ('Test User'); INSERT INTO rooms (roomname) VALUES ('main');");
     done();
   });
 
@@ -42,7 +42,7 @@ describe('Persistent Node Chat Server', function () {
         uri: 'http://127.0.0.1:3000/classes/messages',
         json: {
           username: 'Valjean',
-          message: 'In mercy\'s name, three days is all I need.',
+          text: 'In mercy\'s name, three days is all I need.',
           roomname: 'Hello'
         }
       }, function () {
@@ -75,7 +75,9 @@ describe('Persistent Node Chat Server', function () {
     //   INSERT INTO messages (msg, user_id, room_id) \
     //   VALUES ('Men like you can never change!', 1, id FROM rooms WHERE roomname = 'main');";
 
-    var queryString = "INSERT INTO messages (msg, user_id, room_id) VALUES ('Men like you can never change!', (SELECT users.id FROM users WHERE users.username = 'Test User'), (SELECT rooms.id FROM rooms WHERE rooms.roomname = 'main'));";
+    dbConnection.query("INSERT IGNORE INTO rooms (roomname) VALUES ('main')");
+    var queryString = "INSERT INTO messages (msg, user_id, room_id) VALUES ('Men like you can never change!', (SELECT users.id FROM users WHERE users.username = 'default'), (SELECT rooms.id FROM rooms WHERE rooms.roomname = 'main'));";
+
 
     var queryArgs = [];
     // TODO - The exact query string and query args to use
@@ -91,10 +93,30 @@ describe('Persistent Node Chat Server', function () {
       // the message we just inserted:
       request('http://127.0.0.1:3000/classes/messages', function (error, response, body) {
         var messageLog = JSON.parse(body);
-        expect(messageLog[0].msg).to.equal('Men like you can never change!');
-        expect(messageLog[0].roomname).to.equal('main');
+        expect(messageLog.results[0].text).to.equal('Men like you can never change!');
+        expect(messageLog.results[0].roomname).to.equal('main');
         done();
       });
     });
+  });
+
+  it('Should post user to the database', function (done) {
+    request({
+      method: 'POST',
+      uri: 'http://127.0.0.1:3000/classes/users',
+      json: { username: 'TESTUSER2' }
+    }, function () {
+      dbConnection.query('SELECT username FROM users', function(err, response) {
+        var index = -1;
+
+        response.forEach((element, i) => {
+          if(element.username === 'TESTUSER2') {
+            index = i;
+          }
+        });
+        expect(index).to.not.equal(-1);
+        done();
+      })
+    })
   });
 });
