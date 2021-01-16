@@ -1,25 +1,26 @@
-var mysql = require('mysql');
+var Sequelize = require('Sequelize');
+var orm  = new Sequelize('chat', 'root', '');
 
-// Create a database connection and export it from this file.
-// You will need to connect with the user "root", no password,
-// and to the database "chat".
+var User = orm.define('User', {
+  username: Sequelize.STRING
+})
 
-// REFERENCE - https://www.mysqltutorial.org/mysql-nodejs/connect/
+var Message = orm.define('Message', {
+  msg: Sequelize.STRING,
+})
 
-let connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'chat',
-  multipleStatements: true
-});
+var Room = orm.define('Room', {
+  roomname: Sequelize.STRING
+})
 
-connection.connect((err) => {
-  if (err) {
-    console.log('Error connecting to the database: ' + err.message);
-  }
+Room.hasMany(Message);
+User.hasMany(Message);
+Message.belongsTo(User);
+Message.belongsTo(Room);
 
-  console.log('Connected to MySQL database server.');
-});
+User.sync();
+Message.sync();
+Room.sync();
 
-module.exports = connection;
+exports.User = User;
+exports.Message = Message;
